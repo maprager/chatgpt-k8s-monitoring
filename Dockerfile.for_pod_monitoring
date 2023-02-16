@@ -1,0 +1,21 @@
+ Use a minimal base image
+FROM alpine
+
+# Add curl and perl
+RUN apk add --update perl perl-net-dns curl bash
+ADD http://www.jetmore.org/john/code/swaks/files/swaks-20170101.0/swaks swaks
+
+# Add kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt
+)/bin/linux/amd64/kubectl
+RUN chmod +x ./kubectl
+RUN mv ./kubectl /usr/local/bin
+
+# Copy the bash script into the image
+COPY ./queryPodError.sh /usr/local/bin/
+
+# Make the script executable
+RUN chmod +x /usr/local/bin/queryPodError.sh
+
+# Set the command that will run the script
+CMD ["/bin/bash","/usr/local/bin/queryPodError.sh"]
