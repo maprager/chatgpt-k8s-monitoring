@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatgpt-client
+  namespace: default
+  labels:
+    functionGroup: chatgpt-client
+    service: chatgpt-client
+    deployedby: mark
+    version: "1.0"
+spec:
+  selector:
+    matchLabels:
+      functionGroup: chatgpt-client
+      service: chatgpt-client
+      version: "1.0"
+      deploymentTag: "1.0"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      annotations:
+        tags: chatgpt-client
+      labels:
+        functionGroup: chatgpt-client
+        service: chatgpt-client
+        version: "1.0"
+        deploymentTag: "1.0"
+    spec:
+      containers:
+        - name: chatgpt-client
+          image: pragerhome/chatgpt-local:1.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_ENV
+              value: production
+          ports:
+            - name: server-port
+              containerPort: 5000
+              protocol: TCP
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu:    "100m"
+            limits:
+              memory: "512Mi"
+              cpu:    "200m"
