@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatgpt-client-lb
+  namespace: default
+  labels:
+    functionGroup: chatgpt-client
+    service: chatgpt-client
+    deployedby: markp
+    version: "1.0"
+    wait: "false"
+spec:
+  selector:
+    functionGroup: chatgpt-client
+    service: chatgpt-client
+    version: "1.0"
+    deploymentTag: "1.0"
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: server-port
+  type: LoadBalancer
