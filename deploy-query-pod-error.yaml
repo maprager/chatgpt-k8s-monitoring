@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-pod-error-pod
+  namespace: default
+  labels:
+    functionGroup: query-pod-error-pod
+    service: query-pod-error-pod
+    deployedby: mark
+    version: "1.0"
+spec:
+  selector:
+    matchLabels:
+      functionGroup: query-pod-error-pod
+      service: query-pod-error-pod
+      version: "1.0"
+      deploymentTag: "1.0"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      annotations:
+        tags: query-pod-error-pod
+      labels:
+        functionGroup: query-pod-error-pod
+        service: query-pod-error-pod
+        version: "1.0"
+        deploymentTag: "1.0"
+    spec:
+      containers:
+        - name: query-pod-error-pod
+          image: pragerhome/query-pod-error:1.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_ENV
+              value: production
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu:    "100m"
+            limits:
+              memory: "512Mi"
+              cpu:    "200m"
