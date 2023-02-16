@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: failing-pod-image
+spec:
+  containers:
+  - name: failing-image
+    image: gobledegook
