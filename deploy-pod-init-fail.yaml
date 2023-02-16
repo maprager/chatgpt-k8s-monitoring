@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: failing-pod-init
+spec:
+  initContainers:
+  - name: failing-init-container
+    image: alpine
+    command: ["/bin/sh", "-c", "exit 1"]
+  containers:
+  - name: failing-container
+    image: alpine
